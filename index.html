@@ -191,6 +191,22 @@
         <p>
             Update any hardcoded paths in <code>socialNetwork/runtime_files/rubbos.properties_1000</code> to match your environment.
         </p>
+
+        <p>
+            Specifically, look for lines that contain paths like:
+        </p>
+        <div class="code-block">
+            <pre><code>\Users\NAME\...\SocialNetwork\RubbosClient\...</code></pre>
+        </div>
+        <p>
+            You should replace these paths with the correct paths on your system where the corresponding files are located. For example:
+        </p>
+        <p>
+            Make sure to update all instances of hardcoded paths in the file. This ensures that the workload generator and other components can locate the necessary files during the experiment.
+        </p>
+        <p>
+            Additionally, verify that the paths use the correct directory separators for your operating system (e.g., forward slashes <code>/</code> for Unix/Linux systems).
+        </p>
         
         <h3>
             5. Run the Controller Setup Script
