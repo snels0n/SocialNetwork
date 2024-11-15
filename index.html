@@ -1,178 +1,342 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Project Documentation</title>
-</head>
-<body>
+    
+    <head>
+        <title>
+            ELBA/WISE Millibottleneck Theory: CloudLab Experiment Setup and Execution Guide
+        </title>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+            h1, h2, h3, h4 { color: #2c3e50; }
+            code { background-color: #f4f4f4; padding: 2px 4px; font-size: 90%; color: #c7254e; }
+            pre { background-color: #f4f4f4; padding: 10px; overflow-x: auto; }
+            img { max-width: 100%; height: auto; }
+            .code-block { background-color: #f4f4f4; padding: 10px; overflow-x: auto; border-left: 3px solid #3498db; margin: 20px 0; }
+            .figure { text-align: center; margin: 20px 0; }
+            .figure img { border: 1px solid #ddd; padding: 5px; }
+            .figure-caption { margin-top: 5px; font-style: italic; color: #555; }
+            ul { list-style-type: disc; margin-left: 20px; }
+            ol { margin-left: 20px; }
+            table { width: 80%; border-collapse: collapse; margin: 20px auto; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+            .important { background-color: #fff3cd; padding: 10px; border-left: 3px solid #ffeeba; margin: 20px 0; }
+        </style>
+    </head>
+    
+    <body>
+        <h1>
+            ELBA/WISE Millibottleneck Theory: CloudLab Experiment Setup and Execution Guide
+        </h1>
+        
+        <h2>
+            Introduction
+        </h2>
+        <p>
+            It is commonly known that system performance is often limited by the smallest bottleneck within the workflow. Instead of a single bottleneck hindering the performance of a system, we observe a theory concerned with the validation of the existence of millibottlenecks. These millibottlenecks compound, leading to microdelays with real-world consequences on load time for services and webpages, impacting company revenue.
+        </p>
+        
+        <h2>
+            Objectives
+        </h2>
+        <p>
+            In this experiment, we wish to experimentally validate the millibottleneck theory of performance bugs using WISE/ELBA, a toolkit to conduct large-scale system experiments in the cloud.
+        </p>
+        
+        <h2>
+            Prerequisites
+        </h2>
+        
+        <h3>
+            Generating an SSH Public Key
+        </h3>
+        
+        <p>Follow these steps to create an SSH public key without a passphrase:</p>
+        <ol>
+            <li>Open a terminal on your computer.</li>
+            <li>Run the following command to generate a new SSH key pair:</li>
+            <pre><code>ssh-keygen -t rsa -b 4096 -C "your_email@example.com"</code></pre>
+            <li>When prompted to specify a file to save the key, press <strong>Enter</strong> to use the default location.</li>
+            <li>When asked to enter a passphrase, simply press <strong>Enter</strong> to leave it empty.</li>
+            <li>When prompted to confirm the passphrase, press <strong>Enter</strong> again.</li>
+            <li>Your SSH key pair is now generated. The private key is stored in <code>~/.ssh/id_rsa</code>, and the public key is in <code>~/.ssh/id_rsa.pub</code>.</li>
+        </ol>
+        <p>Confirm the creation of the key by running:</p>
+        <pre><code>cat ~/.ssh/id_rsa.pub</code></pre>
+    
+        <h3>Add SSH Public Key to GitHub</h3>
+        <p>Once you've generated an SSH key, follow these steps to add it to your GitHub account:</p>
+        <ol>
+            <li>Log in to your GitHub account.</li>
+            <li>In the upper-right corner of the page, click your profile photo, then select <strong>Settings</strong> from the dropdown menu.</li>
+            <li>In the left sidebar, click <strong>SSH and GPG keys</strong>.</li>
+            <li>Click the <strong>New SSH key</strong> button.</li>
+            <li>In the <strong>Title</strong> field, add a label for the key.</li>
+            <li>In your terminal, copy the contents of your public key file by running:</li>
+            <pre><code>cat ~/.ssh/id_rsa.pub</code></pre>
+            <li>Paste the copied key into the <strong>Key</strong> field on GitHub.</li>
+            <li>Click the <strong>Add SSH key</strong> button.</li>
+            <li>If prompted, confirm your GitHub password to complete the process.</li>
+        </ol>
+        <p>You're now ready to use SSH with GitHub! Test your setup by running:</p>
+        <pre><code>ssh -T git@github.com</code></pre>
+        <p>If everything is set up correctly, you should see a success message.</p>
+        
+        <h3>
+            Initial CloudLab Setup
+        </h3>
+    
+        <p>The experiment will run cloud-instantiated experiments in CloudLab. Access to scientific tools and bare-metal access for provisioned computing resources can only be obtained by creating an account and applying to the <strong>Infosphere</strong> project.</p>
+    
+        <p>To create your CloudLab account:</p>
+        <ol>
+            <li>Access the <a href="https://cloudlab.us/signup.php" target="_blank">CloudLab Sign-Up Page</a>.</li>
+            <li>Enter all necessary information in the <strong>Personal Information</strong> section (if this project pertains to a university/college project, use your school credentials).</li>
+            <li>In the <strong>Project Information</strong> section, select <strong>Join Existing Project</strong> and enter <strong>Infosphere</strong> for the Project ID.</li>
+            <li>Click on <strong>Submit Request</strong> to complete the registration of CloudLab.</li>
+        </ol>
+        <p><em>The <strong>SSH Public Key File</strong> will be entered in a subsequent step.</em></p>
+        <p><em>Your request to join the <strong>Infosphere</strong> project is now awaiting approval from a TA. If your request is pending after a couple of days, please contact the responsible TA.</em></p>
+    
+        <p>After creating a CloudLab account, access the <strong>Manage Account</strong> section by clicking on the button with your username in the top right corner. In the <strong>Default Shell</strong> section, ensure <code>bash</code> is selected. Click <strong>Save</strong> to save any changes.</p>
+    
+        <p>We will add your SSH Public Key to CloudLab. Access the <strong>Manage SSH Keys</strong> section by clicking on the button with your username in the top right corner. In your terminal, enter <code>cat ~/.ssh/id_rsa.pub</code>. Copy the SSH Public Key and add it to CloudLab.</p>
+        
+        <h2>
+            Important Files
+        </h2>
+        <ul>
+            <li><code>profile.py</code>: CloudLab profile configuration script.</li>
+            <li><code>controller_setup.sh</code>: Script to set up the controller node.</li>
+            <li><code>JobManager.py</code>: Python script to manage and automate experiments.</li>
+            <li><code>config/config.json</code>: Configuration file for experiment parameters.</li>
+            <li><code>socialNetwork/runtime_files/rubbos.properties_1000</code>: Properties file requiring path adjustments.</li>
+        </ul>
+        
+        <h2>
+            Steps to Run the Experiment
+        </h2>
+        <h3>
+            1. Check Resource Availability
+        </h3>
+        <p>
+            In CloudLab, ensure that a bare-metal machine with at least 12 free resources is available on CloudLab (e.g., <em>rs620</em>, <em>r350</em>).
+        </p>
+        
+        <h3>
+            2. Create a CloudLab Experiment
+        </h3>
+        
+        <p>
+            Create a new experiment on CloudLab:
+        </p>
+        <ol>
+            <li>Navigate to the CloudLab <strong>Experiments</strong> page and create a new experiment.<li>
+            <li>Select <strong>Change Profile</strong> and select a profile with the necessary bare-metal machine properties.
+            <li>Select <strong>Select Profile</strong> and continue through the profile setup process.</li>
+            <li>Ensure the number of nodes is set to 12 and set the <strong>Experiment Duration</strong> to at least 4 hours.</li>
+        </ol>
 
-<h1>Project Documentation</h1>
-
-<h2>Introduction</h2>
-<p>
-    This project aims to set up and run experiments using the <a href="https://github.com/WindowsXp-Beta/SocialNetwork">SocialNetwork application</a> on CloudLab. The primary goal is to benchmark the performance of the application and analyze its behavior under different configurations.
-</p>
-
-<h2>Objectives</h2>
-<p>
-    We intend to demonstrate the scalability and efficiency of the SocialNetwork application when deployed in a distributed cloud environment. By conducting these experiments, we aim to identify potential bottlenecks and areas for optimization.
-</p>
-
-<h2>Prerequisites</h2>
-<ul>
-    <li>CloudLab account with access to bare-metal machines.</li>
-    <li>Basic knowledge of SSH and command-line operations.</li>
-    <li>Java Development Kit (JDK) version 1.8.0_241.</li>
-    <li>Python 3 installed on your local machine.</li>
-    <li>Git installed and configured with your email.</li>
-</ul>
-
-<h2>Important Files</h2>
-<ul>
-    <li><code>profile.py</code>: CloudLab profile configuration script.</li>
-    <li><code>controller_setup.sh</code>: Script to set up the controller node.</li>
-    <li><code>JobManager.py</code>: Python script to manage experiments.</li>
-    <li><code>config/config.json</code>: Configuration file for experiment parameters.</li>
-    <li><code>socialNetwork/runtime_files/rubbos.properties_1000</code>: Properties file that may require path adjustments.</li>
-</ul>
-
-<h2>Steps to Run the Experiment</h2>
-<ol>
-    <li>
-        <strong>Check Resource Availability</strong>
+        After you have completed the setup process, the experiment will be ready in approximately 20 minutes.
+        
+        <p>
+            Modify the <code>profile.py</code> script to match your experiment's requirements:
+        </p>
         <ul>
-            <li>Ensure a bare-metal machine with at least 12 free resources is available on CloudLab (e.g., <em>rs620</em>, <em>r350</em>).</li>
+            <li>Set the appropriate hardware type.</li>
+            <li>Adjust the node count to the number of instantiated nodes.</li>
         </ul>
-    </li>
-    <li>
-        <strong>Edit the Profile</strong>
+        
+        <h3>
+            3. Download Project Files
+        </h3>
+        <p>
+            Download the project zip file using the provided link:
+            <a href="https://gtvault-my.sharepoint.com/personal/xwei303_gatech_edu/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fxwei303%5Fgatech%5Fedu%2FDocuments%2FElba&ga=1">Download Zip File</a>.
+        </p>
+        <p>
+            Add the JDK files to the following directories within the project:
+        </p>
         <ul>
-            <li>Modify the <code>profile.py</code> file by setting the appropriate hardware type and node count based on available resources.</li>
-            <li>Create a new profile on CloudLab using the modified <code>profile.py</code>.</li>
-            <li>Accept the changes and save the profile.</li>
-            <li>Click "Instantiate" to start the experiment and wait for it to initialize.</li>
+            <li><code>/RubbosClient/elba/rubbos/jdk1.8.0_241</code></li>
+            <li><code>/RubbosClient/rubbos/jdk-8u241-linux-x64.tar.gz</code></li>
         </ul>
-    </li>
-    <li>
-        <strong>Download Project Files</strong>
+        <p>
+            Ensure the JDK binaries have executable permissions:
+        </p>
+        <div class="code-block">
+            <pre><code>chmod +x SocialNetwork/RubbosClient/elba/rubbos/jdk1.8.0_241/bin/java</code></pre>
+        </div>
+        
+        <h3>
+            4. Configure Settings
+        </h3>
+        <h4>
+            Populate <code>config/config.json</code>
+        </h4>
+        <p>
+            Update the <code>config/config.json</code> file with your specific values.
+        </p>
+        <p>
+            <strong>Example:</strong>
+        </p>
         <ul>
-            <li>Download the project zip file using the provided link: <a href="#">Download Zip File</a>.</li>
-            <li>Place the JDK files in the following directories within the project:
-                <ul>
-                    <li><code>/RubbosClient/elba/rubbos/jdk1.8.0_241</code></li>
-                    <li><code>/RubbosClient/rubbos/jdk-8u241-linux-x64.tar.gz</code></li>
-                </ul>
+            <li><code>username: "CloudLabUsername"</code></li>
+            <li><code>experiment_name: "username-######"</code>
+            <li><code>ssh_host: "cloudlab.umass.edu"</code> or <code>ssh_host: "apt.emulab.net"</code></li>
+        </ul>
+        <h4>
+            Adjust Properties File
+        </h4>
+        <p>
+            Update any hardcoded paths in <code>socialNetwork/runtime_files/rubbos.properties_1000</code> to match your environment.
+        </p>
+        
+        <h3>
+            5. Run the Controller Setup Script
+        </h3>
+        <p>
+            Execute the <code>controller_setup.sh</code> script with the appropriate arguments:
+        </p>
+        <div class="code-block">
+            <pre><code>./controller_setup.sh --username YourCloudLabUsername --private_ssh_key_path "/path/to/your/id_rsa" --controller_node your.controller.node --git_email your.email@example.com --swarm_node_number 6 --client_node_number 5</code></pre>
+        </div>
+        <p>
+            Replace the placeholders with your actual information.
+        </p>
+        
+        <h3>
+            6. Start the Experiment via JobManager
+        </h3>
+        <p>
+            Ensure Python 3 is installed on your local machine. Run the JobManager script:
+        </p>
+        <div class="code-block">
+            <pre><code>python3 JobManager.py</code></pre>
+        </div>
+        <p>
+            When prompted, enter the required information:
+        </p>
+        <ul>
+            <li><strong>CloudLab Username:</strong> (e.g., <code>username</code>)</li>
+            <li><strong>Path to Private SSH Key:</strong> (e.g., <code>/Users/username/.ssh/id_rsa</code>)</li>
+            <li><strong>Hostname of Controller Node:</strong> (e.g., <code>apt186.apt.emulab.net</code>)</li>
+            <li><strong>GitHub Email Address:</strong> (e.g., <code>your.email@example.com</code>)</li>
+            <li><strong>Number of Swarm Nodes:</strong> (e.g., <code>6</code>)</li>
+            <li><strong>Number of Client Nodes:</strong> (e.g., <code>5</code>)</li>
+        </ul>
+        <p>
+            You can add multiple experiments or proceed to configure the current one.
+        </p>
+        <h4>
+            Configure Experiment Files
+        </h4>
+        <p>
+            The script will open several configuration files in a terminal editor:
+        </p>
+        <ul>
+            <li><code>config/config.json</code></li>
+            <li>Docker Swarm template</li>
+            <li>Dedicated scripts</li>
+        </ul>
+        <p>
+            Use the editor to adjust the configurations as needed. Save and exit each file to continue.
+        </p>
+        <p>
+            Confirm all information and start the experiment when prompted.
+        </p>
+        
+        <h3>
+            7. Manage Experiments via JobManager (Optional)
+        </h3>
+        <p>
+            The JobManager script offers several options for managing experiments:
+        </p>
+        <ul>
+            <li><strong>View Saved Experiments:</strong>
+                <div class="code-block">
+                    <pre><code>python3 JobManager.py -custom</code></pre>
+                </div>
             </li>
-            <li>Ensure the JDK binaries have executable permissions:
-                <pre>chmod +x SocialNetwork/RubbosClient/elba/rubbos/jdk1.8.0_241/bin/java</pre>
+            <li><strong>Rerun an Experiment:</strong>
+                <p>Enter the job ID when prompted during the script execution.</p>
+            </li>
+            <li><strong>Delete a Saved Experiment:</strong>
+                <div class="code-block">
+                    <pre><code>python3 JobManager.py -remove</code></pre>
+                </div>
+            </li>
+            <li><strong>Edit a Saved Experiment:</strong>
+                <div class="code-block">
+                    <pre><code>python3 JobManager.py -edit</code></pre>
+                </div>
+                <p>Edit the values in the terminal editor, ensuring each value remains on a separate line.</p>
+            </li>
+            <li><strong>Chain Multiple Experiments:</strong>
+                <div class="code-block">
+                    <pre><code>python3 JobManager.py -chain</code></pre>
+                </div>
+                <p>Select the jobs to chain by entering their IDs separated by spaces. Configure each experiment as prompted.</p>
             </li>
         </ul>
-    </li>
-    <li>
-        <strong>Configure Settings</strong>
-        <ul>
-            <li>Populate the <code>config/config.json</code> file with your specific values.</li>
-            <li>The hostname format is:
-                <pre>node-{idx}.{experiment_name}.infosphere-pg0.{ssh-host without the first varying part}</pre>
-                <ul>
-                    <li>Example: If your experiment name is <em>Username-123456</em> and your SSH host is <em>apt186.apt.emulab.net</em>, the hostname would be formatted accordingly.</li>
-                </ul>
+        
+        <h3>
+            8. Debugging in VS Code (Optional)
+        </h3>
+        <p>
+            For a more convenient development experience, you can use Visual Studio Code to SSH into your controller node:
+        </p>
+        <ol>
+            <li>Click on the SSH extension icon in VS Code.</li>
+            <li>Add a new SSH host using the command:
+                <div class="code-block">
+                    <pre><code>ssh YourUsername@your.controller.node</code></pre>
+                </div>
             </li>
-            <li>Adjust any hardcoded paths in <code>socialNetwork/runtime_files/rubbos.properties_1000</code> to match your environment.</li>
-        </ul>
-    </li>
-    <li>
-        <strong>Run the Controller Setup Script</strong>
-        <ul>
-            <li>Execute the script with the appropriate arguments. Example:
-                <pre>./controller_setup.sh \
---username YourCloudLabUsername \
---private_ssh_key_path "/path/to/your/id_rsa" \
---controller_node your.controller.node \
---git_email your.email@example.com \
---swarm_node_number 6 \
---client_node_number 5</pre>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <strong>Start the Experiment via JobManager</strong>
-        <ul>
-            <li>Ensure Python 3 is installed on your system.</li>
-            <li>Run the JobManager script:
-                <pre>python3 JobManager.py</pre>
-            </li>
-            <li>Provide the required information when prompted:
-                <ul>
-                    <li>CloudLab Username</li>
-                    <li>Path to your private SSH key</li>
-                    <li>Hostname of the controller node</li>
-                    <li>Your GitHub email address</li>
-                    <li>Number of Swarm Nodes</li>
-                    <li>Number of Client Nodes</li>
-                </ul>
-            </li>
-            <li>You will have the option to add multiple experiments or proceed.</li>
-            <li>Configure the <code>config/config.json</code>, Docker Swarm template, and Dedicate scripts as they appear in the terminal editor.</li>
-            <li>Confirm all information and start the experiment when prompted.</li>
-        </ul>
-    </li>
-    <li>
-        <strong>Manage Experiments via JobManager (Optional)</strong>
-        <ul>
-            <li>To view saved experiments:
-                <pre>python3 JobManager.py -custom</pre>
-            </li>
-            <li>To rerun an experiment, enter the job ID when prompted.</li>
-            <li>To delete a saved experiment:
-                <pre>python3 JobManager.py -remove</pre>
-            </li>
-            <li>To edit a saved experiment:
-                <pre>python3 JobManager.py -edit</pre>
-                <ul>
-                    <li>Edit the values in the in-terminal text editor, ensuring each value remains on a separate line.</li>
-                </ul>
-            </li>
-            <li>To chain multiple experiments:
-                <pre>python3 JobManager.py -chain</pre>
-                <ul>
-                    <li>Select the jobs to chain by entering their IDs separated by spaces.</li>
-                    <li>Configure each experiment as prompted.</li>
-                </ul>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <strong>Debugging in VS Code (Optional)</strong>
-        <ul>
-            <li>Use the SSH extension to connect to the controller node.</li>
             <li>If your SSH key is not in the default location, edit the SSH configuration to specify the key path.</li>
-            <li>To copy files from your local machine:
-                <pre>scp -o StrictHostKeyChecking=no -i "/path/to/id_rsa" /local/file/path username@hostname:/remote/path</pre>
+            <li>To copy files from your local machine to the controller node:
+                <div class="code-block">
+                    <pre><code>scp -o StrictHostKeyChecking=no -i "/path/to/id_rsa" /local/file/path YourUsername@your.controller.node:/remote/path</code></pre>
+                </div>
             </li>
             <li>To access other nodes from the controller node:
-                <pre>ssh node-6</pre>
+                <div class="code-block">
+                    <pre><code>ssh node-6</code></pre>
+                </div>
             </li>
+        </ol>
+        
+        <h2>
+            Next Steps
+        </h2>
+        <p>
+            <!-- Replace placeholder text with actual next steps -->
+        </p>
+        <ul>
+            <li>Complete data analysis.</li>
+            <li>Prepare the experiment report.</li>
+            <li>Plan for future experiments.</li>
         </ul>
-    </li>
-</ol>
-
-<h2>Next Steps</h2>
-<p>
-    As we were unable to complete the experiment, the following steps are recommended:
-</p>
-<ul>
-    <li>Troubleshoot any issues encountered during setup and execution.</li>
-    <li>Update the documentation to reflect the latest changes and ensure clarity.</li>
-    <li>Run the experiments once the setup is successful and collect performance data.</li>
-    <li>Analyze the results to identify bottlenecks and optimize the application.</li>
-</ul>
-
-<h2>Additional Resources</h2>
-<ul>
-    <li><a href="https://github.com/WindowsXp-Beta/SocialNetwork">SocialNetwork GitHub Repository</a></li>
-    <li><a href="https://dl.acm.org/doi/10.1145/3634737.3644991">Recent Work on Related Topics (ACM)</a></li>
-    <li><a href="https://ieeexplore.ieee.org/document/10646949">Related Research Paper (IEEE)</a></li>
-</ul>
-
-</body>
+        
+        <h2>
+            Additional Resources
+        </h2>
+        <ul>
+            <li><a href="https://github.com/WindowsXp-Beta/SocialNetwork">SocialNetwork GitHub Repository</a></li>
+        </ul>
+        
+        <h2>
+            References
+        </h2>
+        <ol style="list-style-type: none; padding-left: 0;">
+            <li style="padding-left: 2em; text-indent: -2em;">
+                [1] "Experimental Verification of the Millibottleneck Theory of Performance Bugs with the WISE Toolkit," Gatech.edu, 2024. Available at: <a href="https://sites.cc.gatech.edu/~ral3/tutorial2.html">https://sites.cc.gatech.edu/~ral3/tutorial2.html</a>.
+            </li>
+            <li style="padding-left: 2em; text-indent: -2em;">
+                [2] SocialNetwork Application Repository. Available at: <a href="https://github.com/WindowsXp-Beta/SocialNetwork">https://github.com/WindowsXp-Beta/SocialNetwork</a>
+            </li>
+        </ol>
+        
+        <hr>
+    </body>
 </html>
