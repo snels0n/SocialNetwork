@@ -33,7 +33,7 @@
             Introduction
         </h2>
         <p>
-            It is commonly known that system performance is often limited by the smallest bottleneck within the workflow. Instead of a single bottleneck hindering the performance of a system, we observe a theory concerned with the validation of the existence of millibottlenecks. These millibottlenecks compound, leading to microdelays with real-world consequences on load time for services and webpages, impacting company revenue.
+            It is commonly known that microservice system performance is often limited by the resource bottlenecks in the exeuction path of a request. Instead of a single bottleneck hindering the performance of a system, we observe a theory concerned with the validation of the existence of millibottlenecks. These are transient resource bottlenecks which occur in containers hosting multiple services. They occur so quickly they are often undetectable by traditional resource monitoring tools. These millibottlenecks propogate through the system in undefined ways, leading to long-tail latency on some requests. Company revenue is directly tied to system performance, making these bottlenecks important to understand.
         </p>
         
         <h2>
@@ -56,8 +56,14 @@
             <li>Open a terminal on your computer.</li>
             <li>Run the following command to generate a new SSH key pair:</li>
             <pre><code>ssh-keygen -t rsa -b 4096 -C "your_email@example.com"</code></pre>
+            <ul>
+                <li><code>-t rsa</code>: Specifies the type of key to create. In this case, RSA is used.</li>
+                <li><code>-b 4096</code>: Sets the number of bits in the key to 4096.</li>
+                <li><code>-C "your_email@example.com"</code>: Adds a comment to the key, typically your email address, for identification purposes.</li>
+            </ul>
             <li>When prompted to specify a file to save the key, press <strong>Enter</strong> to use the default location.</li>
             <li>When asked to enter a passphrase, simply press <strong>Enter</strong> to leave it empty.</li>
+            <p>- It is crucial that you do not set a passphrase on your key, as this will prevent it from being used remotely on a host node.</p>
             <li>When prompted to confirm the passphrase, press <strong>Enter</strong> again.</li>
             <li>Your SSH key pair is now generated. The private key is stored in <code>~/.ssh/id_rsa</code>, and the public key is in <code>~/.ssh/id_rsa.pub</code>.</li>
         </ol>
