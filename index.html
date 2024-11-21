@@ -21,6 +21,7 @@
             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
             th { background-color: #f2f2f2; }
             .important { background-color: #fff3cd; padding: 10px; border-left: 3px solid #ffeeba; margin: 20px 0; }
+            .indented { margin-left: 20px; }
         </style>
     </head>
     
@@ -63,7 +64,9 @@
             </ul>
             <li>When prompted to specify a file to save the key, press <strong>Enter</strong> to use the default location.</li>
             <li>When asked to enter a passphrase, simply press <strong>Enter</strong> to leave it empty.</li>
-            <p>- It is crucial that you do not set a passphrase on your key, as this will prevent it from being used remotely on a host node.</p>
+            <ul>
+                <li>It is crucial that you do not set a passphrase on your key, as this will prevent it from being used remotely on a host node.</li>
+            </ul>
             <li>When prompted to confirm the passphrase, press <strong>Enter</strong> again.</li>
             <li>Your SSH key pair is now generated. The private key is stored in <code>~/.ssh/id_rsa</code>, and the public key is in <code>~/.ssh/id_rsa.pub</code>.</li>
         </ol>
@@ -86,7 +89,13 @@
         </ol>
         <p>You're now ready to use SSH with GitHub! Test your setup by running:</p>
         <pre><code>ssh -T git@github.com</code></pre>
+        <ul>
+            <li>The <code>ssh</code> command opens an SSH client on your system.</li>
+            <li>The <code>-T</code> flag disables pseudo-terminal allocation, which is necessary since GitHub does not provide shell access.</li>
+            <li><code>git@github.com</code> specifies the user (git) and the host (github.com) to try and connect to.</li>
+        </ul>
         <p>If everything is set up correctly, you should see a success message.</p>
+        <p><code> Hi &ltGitHub username&gt! You've successfully authenticated, but GitHub does not provide shell access.</code></p>
         
         <h3>
             Initial CloudLab Setup
@@ -112,7 +121,7 @@
             Important Files
         </h2>
         <ul>
-            <li><code>profile.py</code>: CloudLab profile configuration script.</li>
+            <li><code>profile.py</code>: CloudLab experiment profile configuration script.</li>
             <li><code>controller_setup.sh</code>: Script to set up the controller node.</li>
             <li><code>JobManager.py</code>: Python script to manage and automate experiments.</li>
             <li><code>config/config.json</code>: Configuration file for experiment parameters.</li>
@@ -136,22 +145,22 @@
         <p>
             Create a new experiment on CloudLab:
         </p>
-        <ol>
-            <li>Navigate to the CloudLab <strong>Experiments</strong> page and create a new experiment.<li>
-            <li>Select <strong>Change Profile</strong> and select a profile with the necessary bare-metal machine properties.
-            <li>Select <strong>Select Profile</strong> and continue through the profile setup process.</li>
-            <li>Ensure the number of nodes is set to 12 and set the <strong>Experiment Duration</strong> to at least 4 hours.</li>
-        </ol>
-
-        After you have completed the setup process, the experiment will be ready in approximately 20 minutes.
-        
         <p>
             Modify the <code>profile.py</code> script to match your experiment's requirements:
         </p>
         <ul>
-            <li>Set the appropriate hardware type.</li>
-            <li>Adjust the node count to the number of instantiated nodes.</li>
+            <li>Set the appropriate hardware type to match the available resource in CloudLab.</li>
+            <li>Adjust the node count to the number of nodes you will allocate in CloudLab</li>
         </ul>
+
+        <ol>
+            <li>Navigate to the CloudLab <strong>Experiments</strong> page and create a new experiment profile.</li>
+            <li>Select <strong>Upload File</strong> under Source code, and choose your edited profile.py</li>
+            <li>Select <strong>Select Profile</strong> and continue through the profile setup process.</li>
+            <li>Ensure the number of nodes is set to 12 and set the <strong>Experiment Duration</strong> to at least 4 hours.</li>
+        </ol>
+
+        After you have completed the setup process, click <strong>Instantiate</strong> to begin setting up the experiment.
         
         <h3>
             3. Download Project Files
@@ -173,6 +182,9 @@
         <div class="code-block">
             <pre><code>chmod +x SocialNetwork/RubbosClient/elba/rubbos/jdk1.8.0_241/bin/java</code></pre>
         </div>
+        <p>
+            <code>chmod +x</code> changes the files mode bits to be executable. Look up Unix file permissions for more information.
+        </p>
         
         <h3>
             4. Configure Settings
@@ -186,10 +198,18 @@
         <p>
             <strong>Example:</strong>
         </p>
+        <div class="code-block">
+            <pre><code>
+{
+    "username": "$your_cloud_lab_username",
+    "experiment_name": "$username-six_digit_number",
+    "ssh_host": "$host_ssh_name"
+}
+            </code></pre>
+        </div>
         <ul>
-            <li><code>username: "CloudLabUsername"</code></li>
-            <li><code>experiment_name: "username-######"</code>
-            <li><code>ssh_host: "cloudlab.umass.edu"</code> or <code>ssh_host: "apt.emulab.net"</code></li>
+            <li>Experiment name is found on your experiment page once it is ready to run.</li>
+            <li>Host name varies based on the type of resource you have provisioned. For example, if a host name for a node is "&ltCloudLabUsername&gt@pc56.cloudlab.umass.edu," your ssh_host would be cloudlab.umass.edu.</li>
         </ul>
         <h4>
             Adjust Properties File
@@ -202,13 +222,13 @@
             Specifically, look for lines that contain paths like:
         </p>
         <div class="code-block">
-            <pre><code>\Users\NAME\...\SocialNetwork\RubbosClient\elba\rubbos\jdk1.8.0_241\bin\java</code></pre>
+            <pre><code>\users\azhang\...\SocialNetwork\RubbosClient\elba\rubbos\jdk1.8.0_241\bin\java</code></pre>
         </div>
         <div class="code-block">
-            <pre><code>\Users\NAME\...\SocialNetwork\RubbosClientelba\rubbos\RUBBoS\workload\...\</code></pre>
+            <pre><code>\users\azhang\...\SocialNetwork\RubbosClientelba\rubbos\RUBBoS\workload\...\</code></pre>
         </div>
         <p>
-            You should replace these paths with the correct paths on your system where the corresponding files are located.
+            You should replace the old username there with your CloudLab username, as this is what will be executing on the remote nodes.
         </p>
         <p>
             Make sure to update all instances of hardcoded paths in the file. This ensures that the workload generator and other components can locate the necessary files during the experiment.
@@ -224,10 +244,143 @@
             Execute the <code>controller_setup.sh</code> script with the appropriate arguments:
         </p>
         <div class="code-block">
-            <pre><code>./controller_setup.sh --username YourCloudLabUsername --private_ssh_key_path "/path/to/your/id_rsa" --controller_node your.controller.node --git_email your.email@example.com --swarm_node_number 6 --client_node_number 5</code></pre>
+            <pre><code>./controller_setup.sh \
+                --username YourCloudLabUsername \
+                --private_ssh_key_path "/path/to/your/id_rsa" \
+                --controller_node your.controller.node \
+                --git_email your.email@example.com \
+                --swarm_node_number 6 \
+                --client_node_number 5</code></pre>
         </div>
         <p>
             Replace the placeholders with your actual information.
+        </p>
+
+        <h4 class="indented">
+            Controller Setup Script Breakdown
+        </h4>
+
+        <div class="code-block">
+            <pre><code>
+    scp -o StrictHostKeyChecking=no -i ${private_ssh_key_path} ${private_ssh_key_path} ${username}@${controller_node}:.ssh/id_rsa
+    scp -o StrictHostKeyChecking=no -i ${private_ssh_key_path} -r socialNetworkLSU.zip ${username}@${controller_node}:socialNetworkLSU
+            </code></pre>
+        </div>
+        <p>
+            These two lines of the script use scp (secure copy protocol) to copy over your private key and the Social Network zip file to the controller node.
+            You can verify the completion of this step by SSHing in to the controller node and verifying that these files exist on that node. 
+            The command to SSH into that node can be found in the CloudLab experiment page. It should look something like <code>ssh {CloudLab_username}@{node_id}.cloudlab.umass.edu</code>
+        </p>
+
+        <div class="code-block">
+            <pre><code>
+    ssh -o StrictHostKeyChecking=no -i ${private_ssh_key_path} ${username}@${controller_node} "
+            </code></pre>
+        </div>
+        <p>
+            This line will open an SSH connection to the controller node.
+            <code>ssh -o StrictHostKeyChecking=no -i</code>
+            <code>ssh</code> opens the OpenSSH SSH client to allow for remote login to the controller node.
+            <code>-o StrictHostKeyChecking=no</code> is used to give options in the format of the SSH config file. StrictHostKeyChecking specifies how host keys are checked during connection and authentication. If it is set to no, the node will accept incoming SSH keys from servers not in the known hosts list.
+        </p>
+
+        <div class="code-block">
+            <pre><code>
+    ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts
+    echo -e 'Host *\n\tStrictHostKeyChecking no\nHost benchmark\n\tHostName 10.10.1.7\n\tUser ${username}' >> ~/.ssh/config
+            </code></pre>
+        </div>
+        <p>
+            These two lines deal with configuring the remote node for SSH connections.
+            <code>ssh-keygen -F github.com</code> ssh-keygen is a tool for generating and managing authentication keys. The <code>-F</code> flag specifies a hostname to be searched for in the known host config file.
+            <code>ssh-keyscan</code> If the first command fails (hostname not found in known_hosts), this command is run and appended to known_hosts. <code>ssh-keyscan</code> retrieves the ssh host keys for GitHub.
+            The second line adds the text in quotes to the ssh config file on the controller node. This disables strict key checking for all hosts. Then it specifies a host configuration for the 'benchmark' host and specifies an IP address and username.
+        </p>
+
+        <div class="code-block">
+            <pre><code>
+    sudo sh -c \"echo 'Host *\n\tStrictHostKeyChecking no' >> /root/.ssh/config\"
+            </code></pre>
+        </div>
+        <p>
+            This line executes a shell as root user and runs the string as a command in that shell. This modifies the ssh config for the root user in a similar way as above.
+        </p>
+
+        <div class="code-block">
+            <pre><code>
+    git config --global user.email ${git_email}
+    git config --global user.name ${username}
+    git config --global core.editor "vim"
+    git clone git@github.com:WindowsXp-Beta/SocialNetwork.git SetupScripts
+    unzip socialNetworkLSU
+            </code></pre>
+        </div>
+        <p>
+            This block of code configures git on the remote node using your git_email and username.
+            Then, the appropriate repository is cloned from GitHub on to the controller node as the SetupScripts repository.
+            The setup socialNetworkLSU zip file we copied to the controller node is now unzipped.
+        </p>
+
+        <div class="code-block">
+            <pre><code>
+    sudo apt-get update
+    sudo apt-get install -y python3-pip maven pdfgrep
+            </code></pre>
+        </div>
+        <p>
+            <code>sudo apt-get update</code> updates the local package index with the latest verison of available packages for the given OS. This way the package list is up to date before installing any libraries. This requires root permissions.
+            <code>sudo apt-get install -y python3-pip maven pdfgrep</code> installs multiple system wide packages, which requires root permissions. pip is a package manager for python. 
+            Maven is a build automation tool for Java projects, which is necessary to setup the rubbos workload generator for the client nodes. This is required because Rubbos is implemented using Java servlets, which send HTTP requests to the microservices nodes upon command from the controller node.
+            pdfgrep is a command line tool for searching PDF files for text strings. 
+        </p>
+
+        <div class="code-block">
+            <pre><code>
+    cd SetupScripts
+    pip3 install -r requirements.txt
+    python setup_docker_swarm.py -a 10.10.1.1 -n ${swarm_node_number} -cn ${client_node_number}
+            </code></pre>
+        </div>
+        <p>
+            This block of code enters the SetupScripts directory, which is where we cloned the SocialNetwork repository. Then it uses pip to install all necessary python packages for the project, which is defined in requirements.txt.
+            This is standard practice for ensuring that all the necessary dependencies are tracked in a centralized file.
+            Then the setup_docker_swarm.py script is executed. This script takes in the ip address of the managing node, the number of swarm nodes used to host the microservices, and the number of client nodes used to send requests to the SocialNetwork application.
+            This script is complex and a large part of executing the SocialNetwork benchmark, so it has been given a section at the bottom of the site where it's components are explained.
+        </p>
+
+        <div class="code-block">
+            <pre><code>
+    cd ~/DeathStarBench/socialNetwork
+    source set_elba_env.sh
+    ./scripts/CONTROL_exec.sh
+            </code></pre>
+        </div>
+        <p>
+            This navigates into the newly cloned DeathStarBench/socialNetwork directory (done in setup_docker_swarm.py) and attempts to run two scripts.
+            <code>source set_elba_env.sh</code> runs the set_elba_env script in the current shell environment. This means that any variables or functions that are defined in the script are available in the current shell session once the script is finished.
+            <code>./scripts/CONTROL_exec.sh</code> executes the controller script. The capitalized name is a convention to indicate that this a main control script for the application. 
+        </p>
+
+        <div class="code-block">
+            <pre><code>
+    sudo cp /users/${username}/scripts_limit/generateResult.sh /users/${username}/socialNetwork/
+    sudo apt install -y python2
+            </code></pre>
+        </div>
+        <p>
+            This block copies the generateResult.sh script from the scripts_limit directory into the socialNetwork directory that we recently cloned.
+            Then it installs python2 on the controller node which enables the execution of legacy components not compatible with the newer version of Python.
+        </p>
+
+        <div class="code-block">
+            <pre><code>
+    cd /users/${username}/socialNetwork/
+    ./generateResult.sh &> output.log
+            </code></pre>
+        </div>
+        <p>
+            The block changes the current directory and executes the recently copied over script. The output of this script is then redirected to the output.log file.
+            The <code>&></code> operator is used in bash scripts to route both the standard output and the error output into a file.
         </p>
         
         <h3>
@@ -264,6 +417,40 @@
             <li>Docker Swarm template</li>
             <li>Dedicated scripts</li>
         </ul>
+
+        <h4>
+            config/config.json
+        </h4>
+        <div class="code-block">
+            {
+                "username": "$your_cloud_lab_username",
+                "experiment_name": "$username-six_digit_number",
+                "ssh_host": "$host_ssh_name"
+            }
+        </div>
+
+        <p>
+            This is the configuration file that was edited prior to running the controller script. Confirm that these values are accurate and then use CTRL + O to bring up the save prompt. Then hit enter to save, and CTRL + X to exit. 
+        </p>
+
+        <h4>
+            socialNetwork/docker-compose-swarm.yml.template
+        </h4>
+        <p>
+            This is a template file used for configuring Docker Swarm deployments, which in this case are the containers hosting services from the application.
+            In this file you must replace all instances of &lt&ltEXPERIMENT_NAME&gt&gt, &lt&ltSSH-HOST&gt&gt, and &lt&ltUSERNAME&gt&gt with the appropriate values. These are your cloudlab experiment name, the SSH host from config.json, and your cloudlab username.
+            In addition to this, you must determine whether or not 'infosphere' is correct. 'infosphere-pg0' is also a correct hostname, and it is determined by the nodes you have provisioned.
+            This can be determined by connecting to each node via SSH and then executing the <code>hostname</code> command.
+        </p>
+
+        <h4>
+            dedicate.sh
+        </h4>
+        <p>
+            This script allocates CPU cores on each swarm node for each service container. This gives precise control over which core is running which process, and makes sure compute resources are isolated.
+            Interestingly, some containers are given a single core to run on, while some services are given multiple cores. This might indicate that some services are multithreaded or require more compute resources. Further examination of the source code for each container will yield more information.
+        </p>
+
         <p>
             Use the editor to adjust the configurations as needed. Save and exit each file to continue.
         </p>
@@ -348,6 +535,7 @@
         </h2>
         <ul>
             <li><a href="https://github.com/WindowsXp-Beta/SocialNetwork">SocialNetwork GitHub Repository</a></li>
+            <li><a href=https://explainshell.com>Explain Shell Tool</a></li>
         </ul>
         
         <h2>
@@ -361,7 +549,110 @@
                 [2] SocialNetwork Application Repository. Available at: <a href="https://github.com/WindowsXp-Beta/SocialNetwork">https://github.com/WindowsXp-Beta/SocialNetwork</a>
             </li>
         </ol>
+        <h2>
+            Appendix
+        </h2>
+
+        <h4>
+            [A] setup_docker_swarm.py breakdown
+        </h4>
+        <div class="code-block">
+    def parse_args():
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-n', '--number', type=int, required=True, help='Docker Swarm Cluter Size')
+        parser.add_argument('-a', '--ip', type=str, required=True, help='Mgr IP')
+        parser.add_argument('-cn', '--client-number', type=int, required=True, help='Client Cluster Size')
+        return parser.parse_args()
+        </div>
+        <p>
+            This block uses an ArgumentParser object from the argparse library to take in command line arguments. Each line parses the command line arguments, looking for the appropriate flag.
+        </p>
+
+        <div class="code-block">
+    install_docker = '''sudo apt-get update && \
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
+    ca-certificates curl gnupg lsb-release && \
+    sudo install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    sudo apt-get update && \
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y docker-ce docker-ce-cli containerd.io'''
+    install_collectl = 'sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y collectl'
+    install_sysdig = 'sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y sysdig'
+    clone_official_socialnetwork_repo = 'ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts && git clone https://github.com/delimitrou/DeathStarBench.git && cd DeathStarBench && git checkout b2b7af9 && cd ..'
+        </div>
+        <p>
+            The strings in this code block are shell commands for installing Docker, Collectl, Sysdig, and cloning the DeathStarBench repository. The swarm nodes will install Docker, Collectl, and clone the repository, while sysdig is installed on a client node.
+        </p>
+
+        <div class="code-block">
+    with ThreadingGroup(*[f'node-{idx}' for idx in range(0, args.number)]) as swarm_grp, \
+    ThreadingGroup(*[f'node-{idx}' for idx in range(args.number, args.number + args.client_number)]) as client_grp:
+        </div>
+        <p>
+            These two lines use ThreadingGroup from the fabric library to create a group of SSH connections. Fabric is a library used to execute shell commands over SSH. Here, a group of SSH connections is made so that the commands can be executed on each node in the group simulataneously.
+        </p>
+
+        <div class="code-block">
+    swarm_grp.run(install_collectl)
+    print('** collectl installed **')
+    swarm_grp.run(clone_official_socialnetwork_repo)
+    print('** socialNetwork cloned **')
+    swarm_grp.run(install_docker)
+    print('** docker installed **')
+        </div>
+        <p>
+            This code executes the installation commands for collectl, clone_official_socialnetwork_repo, and install_docker on each node in the swarm_grp threading group.
+        </p>
+
+        <div class="code-block">
+    ret = subprocess.run(['sudo', 'docker', 'swarm', 'init', '--advertise-addr', args.ip], capture_output=True)
+    print('** swarm manager initialized **')
+    swarm_join_cmd_ptn = r'(docker swarm join --token .*:\d+)'
+    swarm_join_cmd = re.search(swarm_join_cmd_ptn, ret.stdout.decode('utf-8'))
+    if swarm_join_cmd is None:
+        print('Don\'t find match pattern for docker swarm join:')
+        print(f'The ret of swarm init is {ret}')
+        exit(0)
+    else:
+        swarm_join_cmd = swarm_join_cmd.group()
+        </div>
+        <p>
+            <code>ret = subprocess.run(['sudo', 'docker', 'swarm', 'init', '--advertise-addr', args.ip], capture_output=True)</code> This initializes a Docker Swarm on the controller node. The --advertise-addr argument specifies the IP address other nodes will use to join the swarm.
+            <code>
+                swarm_join_cmd_ptn = r'(docker swarm join --token .*:\d+)'
+                swarm_join_cmd = re.search(swarm_join_cmd_ptn, ret.stdout.decode('utf-8'))
+            </code>
+            This defines a RegEx expression that is used to extract the command used to join the Docker swarm node. The second line uses a RegEx search utility function to find and return the command string from the output of the swarm initialization.
+
+            It properly handles the case where this command isn't found. If it is found, it extracts the string and sets it to the swarm_join_cmd variable.
+        </p>
+
+        <div class="code-block">
+    with ThreadingGroup.from_connections(swarm_grp[1:]) as grp_worker:
+        grp_worker.run('sudo ' + swarm_join_cmd)
+        grp_worker.run('if [ ! -e "$HOME/.ssh/config" ]; then echo -e "Host *\n\tStrictHostKeyChecking no" >> $HOME/.ssh/config; fi')
+        grp_worker.put(Path.home()/'.ssh'/'id_rsa', '.ssh')
+        print('** swarm cluster ready **')
+        </div>
+        <p>
+            This block of code initializes a new ThreadingGroup that represents the worker nodes (hosting active containers), and gets them to join the swarm using the command found earlier.
+            The next line checks if the SSH config is there on each node, and then adds a line to the file that disables strict host key checking.
+            Then, the private key we uploaded to the controller is dispered to all the nodes in the workergroup.
+        </p>
+
         
+
+
+
+        <h4>
+            [B] CloudLab Tips
+        </h4>
+        <ul>
+            <li>If you are executing this experiment with a partner, make sure you also add their public keys to your GitHub and CloudLab key management system.</li>
+            <li>In order to successfully provision nodes from CloudLab, make sure there are one's available before instantiating the profile. You can check the availability of nodes, and their future availabilty on the resource availability page. This is done by looking at the graph.</li>
+        </ul>
         <hr>
     </body>
 </html>
