@@ -1,57 +1,159 @@
 <!DOCTYPE html>
 <html>
-    
-    <head>
-        <title>
-            ELBA/WISE Millibottleneck Theory: CloudLab Experiment Setup and Execution Guide
-        </title>
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
-            h1, h2, h3, h4 { color: #2c3e50; }
-            code { background-color: #f4f4f4; padding: 2px 4px; font-size: 90%; color: #c7254e; }
-            pre { background-color: #f4f4f4; padding: 10px; overflow-x: auto; }
-            img { max-width: 100%; height: auto; }
-            .code-block { background-color: #f4f4f4; padding: 10px; overflow-x: auto; border-left: 3px solid #3498db; margin: 20px 0; }
-            .figure { text-align: center; margin: 20px 0; }
-            .figure img { border: 1px solid #ddd; padding: 5px; }
-            .figure-caption { margin-top: 5px; font-style: italic; color: #555; }
-            ul { list-style-type: disc; margin-left: 20px; }
-            ol { margin-left: 20px; }
-            table { width: 80%; border-collapse: collapse; margin: 20px auto; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-            .important { background-color: #fff3cd; padding: 10px; border-left: 3px solid #ffeeba; margin: 20px 0; }
-            .indented { margin-left: 20px; }
-        </style>
-    </head>
-    
-    <body>
+
+<head>
+    <title>
+        ELBA/WISE Millibottleneck Theory: CloudLab Experiment Setup and Execution Guide
+    </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #2c3e50;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            font-size: 90%;
+            color: #c7254e;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .code-block {
+            background-color: #f4f4f4;
+            padding: 10px;
+            overflow-x: auto;
+            border-left: 3px solid #3498db;
+            margin: 20px 0;
+        }
+
+        .figure {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .figure img {
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
+
+        .figure-caption {
+            margin-top: 5px;
+            font-style: italic;
+            color: #555;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        ol {
+            margin-left: 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .important {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-left: 3px solid #ffeeba;
+            margin: 20px 0;
+        }
+
+        .indented {
+            margin-left: 20px;
+        }
+
+        .image {
+            height: 50%;
+            width: 50%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        function changePage(pageNum) {
+            document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+            document.getElementById(`page${pageNum}`).style.display = 'block';
+        }
+    </script>
+    <div class="page" id="page1">
+
+
         <h1>
             ELBA/WISE Millibottleneck Theory: CloudLab Experiment Setup and Execution Guide
         </h1>
-        
+
+        <button onclick="changePage(1)">CloudLab</button>
+        <button onclick="changePage(2)">PACE Cluster</button>
+
         <h2>
             Introduction
         </h2>
         <p>
-            It is commonly known that microservice system performance is often limited by the resource bottlenecks in the exeuction path of a request. Instead of a single bottleneck hindering the performance of a system, we observe a theory concerned with the validation of the existence of millibottlenecks. These are transient resource bottlenecks which occur in containers hosting multiple services. They occur so quickly they are often undetectable by traditional resource monitoring tools. These millibottlenecks propogate through the system in undefined ways, leading to long-tail latency on some requests. Company revenue is directly tied to system performance, making these bottlenecks important to understand.
+            It is commonly known that microservice system performance is often limited by the resource bottlenecks in
+            the exeuction path of a request. Instead of a single bottleneck hindering the performance of a system, we
+            observe a theory concerned with the validation of the existence of millibottlenecks. These are transient
+            resource bottlenecks which occur in containers hosting multiple services. They occur so quickly they are
+            often undetectable by traditional resource monitoring tools. These millibottlenecks propogate through the
+            system in undefined ways, leading to long-tail latency on some requests. Company revenue is directly tied to
+            system performance, making these bottlenecks important to understand.
         </p>
-        
+
         <h2>
             Objectives
         </h2>
         <p>
-            In this experiment, we wish to experimentally validate the millibottleneck theory of performance bugs using WISE/ELBA, a toolkit to conduct large-scale system experiments in the cloud.
+            In this experiment, we wish to experimentally validate the millibottleneck theory of performance bugs using
+            WISE/ELBA, a toolkit to conduct large-scale system experiments in the cloud.
         </p>
-        
+
         <h2>
             Prerequisites
         </h2>
-        
+
         <h3>
             Generating an SSH Public Key
         </h3>
-        
+
         <p>Follow these steps to create an SSH public key without a passphrase:</p>
         <ol>
             <li>Open a terminal on your computer.</li>
@@ -60,24 +162,29 @@
             <ul>
                 <li><code>-t rsa</code>: Specifies the type of key to create. In this case, RSA is used.</li>
                 <li><code>-b 4096</code>: Sets the number of bits in the key to 4096.</li>
-                <li><code>-C "your_email@example.com"</code>: Adds a comment to the key, typically your email address, for identification purposes.</li>
+                <li><code>-C "your_email@example.com"</code>: Adds a comment to the key, typically your email address,
+                    for identification purposes.</li>
             </ul>
-            <li>When prompted to specify a file to save the key, press <strong>Enter</strong> to use the default location.</li>
+            <li>When prompted to specify a file to save the key, press <strong>Enter</strong> to use the default
+                location.</li>
             <li>When asked to enter a passphrase, simply press <strong>Enter</strong> to leave it empty.</li>
             <ul>
-                <li>It is crucial that you do not set a passphrase on your key, as this will prevent it from being used remotely on a host node.</li>
+                <li>It is crucial that you do not set a passphrase on your key, as this will prevent it from being used
+                    remotely on a host node.</li>
             </ul>
             <li>When prompted to confirm the passphrase, press <strong>Enter</strong> again.</li>
-            <li>Your SSH key pair is now generated. The private key is stored in <code>~/.ssh/id_rsa</code>, and the public key is in <code>~/.ssh/id_rsa.pub</code>.</li>
+            <li>Your SSH key pair is now generated. The private key is stored in <code>~/.ssh/id_rsa</code>, and the
+                public key is in <code>~/.ssh/id_rsa.pub</code>.</li>
         </ol>
         <p>Confirm the creation of the key by running:</p>
         <pre><code>cat ~/.ssh/id_rsa.pub</code></pre>
-    
+
         <h3>Add SSH Public Key to GitHub</h3>
         <p>Once you've generated an SSH key, follow these steps to add it to your GitHub account:</p>
         <ol>
             <li>Log in to your GitHub account.</li>
-            <li>In the upper-right corner of the page, click your profile photo, then select <strong>Settings</strong> from the dropdown menu.</li>
+            <li>In the upper-right corner of the page, click your profile photo, then select <strong>Settings</strong>
+                from the dropdown menu.</li>
             <li>In the left sidebar, click <strong>SSH and GPG keys</strong>.</li>
             <li>Click the <strong>New SSH key</strong> button.</li>
             <li>In the <strong>Title</strong> field, add a label for the key.</li>
@@ -91,32 +198,47 @@
         <pre><code>ssh -T git@github.com</code></pre>
         <ul>
             <li>The <code>ssh</code> command opens an SSH client on your system.</li>
-            <li>The <code>-T</code> flag disables pseudo-terminal allocation, which is necessary since GitHub does not provide shell access.</li>
-            <li><code>git@github.com</code> specifies the user (git) and the host (github.com) to try and connect to.</li>
+            <li>The <code>-T</code> flag disables pseudo-terminal allocation, which is necessary since GitHub does not
+                provide shell access.</li>
+            <li><code>git@github.com</code> specifies the user (git) and the host (github.com) to try and connect to.
+            </li>
         </ul>
         <p>If everything is set up correctly, you should see a success message.</p>
-        <p><code> Hi &ltGitHub username&gt! You've successfully authenticated, but GitHub does not provide shell access.</code></p>
-        
+        <p><code> Hi &ltGitHub username&gt! You've successfully authenticated, but GitHub does not provide shell access.</code>
+        </p>
+
         <h3>
             Initial CloudLab Setup
         </h3>
-    
-        <p>The experiment will run cloud-instantiated experiments in CloudLab. Access to scientific tools and bare-metal access for provisioned computing resources can only be obtained by creating an account and applying to the <strong>Infosphere</strong> project.</p>
-    
+
+        <p>The experiment will run cloud-instantiated experiments in CloudLab. Access to scientific tools and bare-metal
+            access for provisioned computing resources can only be obtained by creating an account and applying to the
+            <strong>Infosphere</strong> project.
+        </p>
+
         <p>To create your CloudLab account:</p>
         <ol>
             <li>Access the <a href="https://cloudlab.us/signup.php" target="_blank">CloudLab Sign-Up Page</a>.</li>
-            <li>Enter all necessary information in the <strong>Personal Information</strong> section (if this project pertains to a university/college project, use your school credentials).</li>
-            <li>In the <strong>Project Information</strong> section, select <strong>Join Existing Project</strong> and enter <strong>Infosphere</strong> for the Project ID.</li>
+            <li>Enter all necessary information in the <strong>Personal Information</strong> section (if this project
+                pertains to a university/college project, use your school credentials).</li>
+            <li>In the <strong>Project Information</strong> section, select <strong>Join Existing Project</strong> and
+                enter <strong>Infosphere</strong> for the Project ID.</li>
             <li>Click on <strong>Submit Request</strong> to complete the registration of CloudLab.</li>
         </ol>
         <p><em>The <strong>SSH Public Key File</strong> will be entered in a subsequent step.</em></p>
-        <p><em>Your request to join the <strong>Infosphere</strong> project is now awaiting approval from a TA. If your request is pending after a couple of days, please contact the responsible TA.</em></p>
-    
-        <p>After creating a CloudLab account, access the <strong>Manage Account</strong> section by clicking on the button with your username in the top right corner. In the <strong>Default Shell</strong> section, ensure <code>bash</code> is selected. Click <strong>Save</strong> to save any changes.</p>
-    
-        <p>We will add your SSH Public Key to CloudLab. Access the <strong>Manage SSH Keys</strong> section by clicking on the button with your username in the top right corner. In your terminal, enter <code>cat ~/.ssh/id_rsa.pub</code>. Copy the SSH Public Key and add it to CloudLab.</p>
-        
+        <p><em>Your request to join the <strong>Infosphere</strong> project is now awaiting approval from a TA. If your
+                request is pending after a couple of days, please contact the responsible TA.</em></p>
+
+        <p>After creating a CloudLab account, access the <strong>Manage Account</strong> section by clicking on the
+            button with your username in the top right corner. In the <strong>Default Shell</strong> section, ensure
+            <code>bash</code> is selected. Click <strong>Save</strong> to save any changes.
+        </p>
+
+        <p>We will add your SSH Public Key to CloudLab. Access the <strong>Manage SSH Keys</strong> section by clicking
+            on the button with your username in the top right corner. In your terminal, enter
+            <code>cat ~/.ssh/id_rsa.pub</code>. Copy the SSH Public Key and add it to CloudLab.
+        </p>
+
         <h2>
             Important Files
         </h2>
@@ -125,9 +247,10 @@
             <li><code>controller_setup.sh</code>: Script to set up the controller node.</li>
             <li><code>JobManager.py</code>: Python script to manage and automate experiments.</li>
             <li><code>config/config.json</code>: Configuration file for experiment parameters.</li>
-            <li><code>socialNetwork/runtime_files/rubbos.properties_1000</code>: Properties file requiring path adjustments.</li>
+            <li><code>socialNetwork/runtime_files/rubbos.properties_1000</code>: Properties file requiring path
+                adjustments.</li>
         </ul>
-        
+
         <h2>
             Steps to Run the Experiment
         </h2>
@@ -135,13 +258,14 @@
             1. Check Resource Availability
         </h3>
         <p>
-            In CloudLab, ensure that a bare-metal machine with at least 12 free resources is available on CloudLab (e.g., <em>rs620</em>, <em>r350</em>).
+            In CloudLab, ensure that a bare-metal machine with at least 12 free resources is available on CloudLab
+            (e.g., <em>rs620</em>, <em>r350</em>).
         </p>
-        
+
         <h3>
             2. Create a CloudLab Experiment
         </h3>
-        
+
         <p>
             Create a new experiment on CloudLab:
         </p>
@@ -157,17 +281,21 @@
             <li>Navigate to the CloudLab <strong>Experiments</strong> page and create a new experiment profile.</li>
             <li>Select <strong>Upload File</strong> under Source code, and choose your edited profile.py</li>
             <li>Select <strong>Select Profile</strong> and continue through the profile setup process.</li>
-            <li>Ensure the number of nodes is set to 12 and set the <strong>Experiment Duration</strong> to at least 4 hours.</li>
+            <li>Ensure the number of nodes is set to 12 and set the <strong>Experiment Duration</strong> to at least 4
+                hours.</li>
         </ol>
 
-        After you have completed the setup process, click <strong>Instantiate</strong> to begin setting up the experiment.
-        
+        After you have completed the setup process, click <strong>Instantiate</strong> to begin setting up the
+        experiment.
+
         <h3>
             3. Download Project Files
         </h3>
         <p>
             Download the project zip file using the provided link:
-            <a href="https://gtvault-my.sharepoint.com/personal/xwei303_gatech_edu/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fxwei303%5Fgatech%5Fedu%2FDocuments%2FElba&ga=1">Download Zip File</a>.
+            <a
+                href="https://gtvault-my.sharepoint.com/personal/xwei303_gatech_edu/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fxwei303%5Fgatech%5Fedu%2FDocuments%2FElba&ga=1">Download
+                Zip File</a>.
         </p>
         <p>
             Add the JDK files to the following directories within the project:
@@ -183,9 +311,10 @@
             <pre><code>chmod +x SocialNetwork/RubbosClient/elba/rubbos/jdk1.8.0_241/bin/java</code></pre>
         </div>
         <p>
-            <code>chmod +x</code> changes the files mode bits to be executable. Look up Unix file permissions for more information.
+            <code>chmod +x</code> changes the files mode bits to be executable. Look up Unix file permissions for more
+            information.
         </p>
-        
+
         <h3>
             4. Configure Settings
         </h3>
@@ -209,13 +338,16 @@
         </div>
         <ul>
             <li>Experiment name is found on your experiment page once it is ready to run.</li>
-            <li>Host name varies based on the type of resource you have provisioned. For example, if a host name for a node is "&ltCloudLabUsername&gt@pc56.cloudlab.umass.edu," your ssh_host would be cloudlab.umass.edu.</li>
+            <li>Host name varies based on the type of resource you have provisioned. For example, if a host name for a
+                node is "&ltCloudLabUsername&gt@pc56.cloudlab.umass.edu," your ssh_host would be cloudlab.umass.edu.
+            </li>
         </ul>
         <h4>
             Adjust Properties File
         </h4>
         <p>
-            Update any hardcoded paths in <code>socialNetwork/runtime_files/rubbos.properties_1000</code> to match your environment.
+            Update any hardcoded paths in <code>socialNetwork/runtime_files/rubbos.properties_1000</code> to match your
+            environment.
         </p>
 
         <p>
@@ -228,15 +360,18 @@
             <pre><code>\users\azhang\...\SocialNetwork\RubbosClientelba\rubbos\RUBBoS\workload\...\</code></pre>
         </div>
         <p>
-            You should replace the old username there with your CloudLab username, as this is what will be executing on the remote nodes.
+            You should replace the old username there with your CloudLab username, as this is what will be executing on
+            the remote nodes.
         </p>
         <p>
-            Make sure to update all instances of hardcoded paths in the file. This ensures that the workload generator and other components can locate the necessary files during the experiment.
+            Make sure to update all instances of hardcoded paths in the file. This ensures that the workload generator
+            and other components can locate the necessary files during the experiment.
         </p>
         <p>
-            Additionally, verify that the paths use the correct directory separators for your operating system (e.g., forward slashes <code>/</code> for Unix/Linux systems).
+            Additionally, verify that the paths use the correct directory separators for your operating system (e.g.,
+            forward slashes <code>/</code> for Unix/Linux systems).
         </p>
-        
+
         <h3>
             5. Run the Controller Setup Script
         </h3>
@@ -267,9 +402,12 @@
             </code></pre>
         </div>
         <p>
-            These two lines of the script use scp (secure copy protocol) to copy over your private key and the Social Network zip file to the controller node.
-            You can verify the completion of this step by SSHing in to the controller node and verifying that these files exist on that node. 
-            The command to SSH into that node can be found in the CloudLab experiment page. It should look something like <code>ssh {CloudLab_username}@{node_id}.cloudlab.umass.edu</code>
+            These two lines of the script use scp (secure copy protocol) to copy over your private key and the Social
+            Network zip file to the controller node.
+            You can verify the completion of this step by SSHing in to the controller node and verifying that these
+            files exist on that node.
+            The command to SSH into that node can be found in the CloudLab experiment page. It should look something
+            like <code>ssh {CloudLab_username}@{node_id}.cloudlab.umass.edu</code>
         </p>
 
         <div class="code-block">
@@ -281,7 +419,9 @@
             This line will open an SSH connection to the controller node.
             <code>ssh -o StrictHostKeyChecking=no -i</code>
             <code>ssh</code> opens the OpenSSH SSH client to allow for remote login to the controller node.
-            <code>-o StrictHostKeyChecking=no</code> is used to give options in the format of the SSH config file. StrictHostKeyChecking specifies how host keys are checked during connection and authentication. If it is set to no, the node will accept incoming SSH keys from servers not in the known hosts list.
+            <code>-o StrictHostKeyChecking=no</code> is used to give options in the format of the SSH config file.
+            StrictHostKeyChecking specifies how host keys are checked during connection and authentication. If it is set
+            to no, the node will accept incoming SSH keys from servers not in the known hosts list.
         </p>
 
         <div class="code-block">
@@ -292,9 +432,13 @@
         </div>
         <p>
             These two lines deal with configuring the remote node for SSH connections.
-            <code>ssh-keygen -F github.com</code> ssh-keygen is a tool for generating and managing authentication keys. The <code>-F</code> flag specifies a hostname to be searched for in the known host config file.
-            <code>ssh-keyscan</code> If the first command fails (hostname not found in known_hosts), this command is run and appended to known_hosts. <code>ssh-keyscan</code> retrieves the ssh host keys for GitHub.
-            The second line adds the text in quotes to the ssh config file on the controller node. This disables strict key checking for all hosts. Then it specifies a host configuration for the 'benchmark' host and specifies an IP address and username.
+            <code>ssh-keygen -F github.com</code> ssh-keygen is a tool for generating and managing authentication keys.
+            The <code>-F</code> flag specifies a hostname to be searched for in the known host config file.
+            <code>ssh-keyscan</code> If the first command fails (hostname not found in known_hosts), this command is run
+            and appended to known_hosts. <code>ssh-keyscan</code> retrieves the ssh host keys for GitHub.
+            The second line adds the text in quotes to the ssh config file on the controller node. This disables strict
+            key checking for all hosts. Then it specifies a host configuration for the 'benchmark' host and specifies an
+            IP address and username.
         </p>
 
         <div class="code-block">
@@ -303,7 +447,8 @@
             </code></pre>
         </div>
         <p>
-            This line executes a shell as root user and runs the string as a command in that shell. This modifies the ssh config for the root user in a similar way as above.
+            This line executes a shell as root user and runs the string as a command in that shell. This modifies the
+            ssh config for the root user in a similar way as above.
         </p>
 
         <div class="code-block">
@@ -317,7 +462,8 @@
         </div>
         <p>
             This block of code configures git on the remote node using your git_email and username.
-            Then, the appropriate repository is cloned from GitHub on to the controller node as the SetupScripts repository.
+            Then, the appropriate repository is cloned from GitHub on to the controller node as the SetupScripts
+            repository.
             The setup socialNetworkLSU zip file we copied to the controller node is now unzipped.
         </p>
 
@@ -328,10 +474,15 @@
             </code></pre>
         </div>
         <p>
-            <code>sudo apt-get update</code> updates the local package index with the latest verison of available packages for the given OS. This way the package list is up to date before installing any libraries. This requires root permissions.
-            <code>sudo apt-get install -y python3-pip maven pdfgrep</code> installs multiple system wide packages, which requires root permissions. pip is a package manager for python. 
-            Maven is a build automation tool for Java projects, which is necessary to setup the rubbos workload generator for the client nodes. This is required because Rubbos is implemented using Java servlets, which send HTTP requests to the microservices nodes upon command from the controller node.
-            pdfgrep is a command line tool for searching PDF files for text strings. 
+            <code>sudo apt-get update</code> updates the local package index with the latest verison of available
+            packages for the given OS. This way the package list is up to date before installing any libraries. This
+            requires root permissions.
+            <code>sudo apt-get install -y python3-pip maven pdfgrep</code> installs multiple system wide packages, which
+            requires root permissions. pip is a package manager for python.
+            Maven is a build automation tool for Java projects, which is necessary to setup the rubbos workload
+            generator for the client nodes. This is required because Rubbos is implemented using Java servlets, which
+            send HTTP requests to the microservices nodes upon command from the controller node.
+            pdfgrep is a command line tool for searching PDF files for text strings.
         </p>
 
         <div class="code-block">
@@ -342,10 +493,16 @@
             </code></pre>
         </div>
         <p>
-            This block of code enters the SetupScripts directory, which is where we cloned the SocialNetwork repository. Then it uses pip to install all necessary python packages for the project, which is defined in requirements.txt.
-            This is standard practice for ensuring that all the necessary dependencies are tracked in a centralized file.
-            Then the setup_docker_swarm.py script is executed. This script takes in the ip address of the managing node, the number of swarm nodes used to host the microservices, and the number of client nodes used to send requests to the SocialNetwork application.
-            This script is complex and a large part of executing the SocialNetwork benchmark, so it has been given a section at the bottom of the site where it's components are explained.
+            This block of code enters the SetupScripts directory, which is where we cloned the SocialNetwork repository.
+            Then it uses pip to install all necessary python packages for the project, which is defined in
+            requirements.txt.
+            This is standard practice for ensuring that all the necessary dependencies are tracked in a centralized
+            file.
+            Then the setup_docker_swarm.py script is executed. This script takes in the ip address of the managing node,
+            the number of swarm nodes used to host the microservices, and the number of client nodes used to send
+            requests to the SocialNetwork application.
+            This script is complex and a large part of executing the SocialNetwork benchmark, so it has been given a
+            section at the bottom of the site where it's components are explained.
         </p>
 
         <div class="code-block">
@@ -356,9 +513,13 @@
             </code></pre>
         </div>
         <p>
-            This navigates into the newly cloned DeathStarBench/socialNetwork directory (done in setup_docker_swarm.py) and attempts to run two scripts.
-            <code>source set_elba_env.sh</code> runs the set_elba_env script in the current shell environment. This means that any variables or functions that are defined in the script are available in the current shell session once the script is finished.
-            <code>./scripts/CONTROL_exec.sh</code> executes the controller script. The capitalized name is a convention to indicate that this a main control script for the application. 
+            This navigates into the newly cloned DeathStarBench/socialNetwork directory (done in setup_docker_swarm.py)
+            and attempts to run two scripts.
+            <code>source set_elba_env.sh</code> runs the set_elba_env script in the current shell environment. This
+            means that any variables or functions that are defined in the script are available in the current shell
+            session once the script is finished.
+            <code>./scripts/CONTROL_exec.sh</code> executes the controller script. The capitalized name is a convention
+            to indicate that this a main control script for the application.
         </p>
 
         <div class="code-block">
@@ -368,8 +529,10 @@
             </code></pre>
         </div>
         <p>
-            This block copies the generateResult.sh script from the scripts_limit directory into the socialNetwork directory that we recently cloned.
-            Then it installs python2 on the controller node which enables the execution of legacy components not compatible with the newer version of Python.
+            This block copies the generateResult.sh script from the scripts_limit directory into the socialNetwork
+            directory that we recently cloned.
+            Then it installs python2 on the controller node which enables the execution of legacy components not
+            compatible with the newer version of Python.
         </p>
 
         <div class="code-block">
@@ -379,10 +542,12 @@
             </code></pre>
         </div>
         <p>
-            The block changes the current directory and executes the recently copied over script. The output of this script is then redirected to the output.log file.
-            The <code>&></code> operator is used in bash scripts to route both the standard output and the error output into a file.
+            The block changes the current directory and executes the recently copied over script. The output of this
+            script is then redirected to the output.log file.
+            The <code>&></code> operator is used in bash scripts to route both the standard output and the error output
+            into a file.
         </p>
-        
+
         <h3>
             6. Start the Experiment via JobManager
         </h3>
@@ -423,32 +588,42 @@
         </h4>
         <div class="code-block">
             {
-                "username": "$your_cloud_lab_username",
-                "experiment_name": "$username-six_digit_number",
-                "ssh_host": "$host_ssh_name"
+            "username": "$your_cloud_lab_username",
+            "experiment_name": "$username-six_digit_number",
+            "ssh_host": "$host_ssh_name"
             }
         </div>
 
         <p>
-            This is the configuration file that was edited prior to running the controller script. Confirm that these values are accurate and then use CTRL + O to bring up the save prompt. Then hit enter to save, and CTRL + X to exit. 
+            This is the configuration file that was edited prior to running the controller script. Confirm that these
+            values are accurate and then use CTRL + O to bring up the save prompt. Then hit enter to save, and CTRL + X
+            to exit.
         </p>
 
         <h4>
             socialNetwork/docker-compose-swarm.yml.template
         </h4>
         <p>
-            This is a template file used for configuring Docker Swarm deployments, which in this case are the containers hosting services from the application.
-            In this file you must replace all instances of &lt&ltEXPERIMENT_NAME&gt&gt, &lt&ltSSH-HOST&gt&gt, and &lt&ltUSERNAME&gt&gt with the appropriate values. These are your cloudlab experiment name, the SSH host from config.json, and your cloudlab username.
-            In addition to this, you must determine whether or not 'infosphere' is correct. 'infosphere-pg0' is also a correct hostname, and it is determined by the nodes you have provisioned.
-            This can be determined by connecting to each node via SSH and then executing the <code>hostname</code> command.
+            This is a template file used for configuring Docker Swarm deployments, which in this case are the containers
+            hosting services from the application.
+            In this file you must replace all instances of &lt&ltEXPERIMENT_NAME&gt&gt, &lt&ltSSH-HOST&gt&gt, and
+            &lt&ltUSERNAME&gt&gt with the appropriate values. These are your cloudlab experiment name, the SSH host from
+            config.json, and your cloudlab username.
+            In addition to this, you must determine whether or not 'infosphere' is correct. 'infosphere-pg0' is also a
+            correct hostname, and it is determined by the nodes you have provisioned.
+            This can be determined by connecting to each node via SSH and then executing the <code>hostname</code>
+            command.
         </p>
 
         <h4>
             dedicate.sh
         </h4>
         <p>
-            This script allocates CPU cores on each swarm node for each service container. This gives precise control over which core is running which process, and makes sure compute resources are isolated.
-            Interestingly, some containers are given a single core to run on, while some services are given multiple cores. This might indicate that some services are multithreaded or require more compute resources. Further examination of the source code for each container will yield more information.
+            This script allocates CPU cores on each swarm node for each service container. This gives precise control
+            over which core is running which process, and makes sure compute resources are isolated.
+            Interestingly, some containers are given a single core to run on, while some services are given multiple
+            cores. This might indicate that some services are multithreaded or require more compute resources. Further
+            examination of the source code for each container will yield more information.
         </p>
 
         <p>
@@ -457,7 +632,7 @@
         <p>
             Confirm all information and start the experiment when prompted.
         </p>
-        
+
         <h3>
             7. Manage Experiments via JobManager (Optional)
         </h3>
@@ -488,15 +663,17 @@
                 <div class="code-block">
                     <pre><code>python3 JobManager.py -chain</code></pre>
                 </div>
-                <p>Select the jobs to chain by entering their IDs separated by spaces. Configure each experiment as prompted.</p>
+                <p>Select the jobs to chain by entering their IDs separated by spaces. Configure each experiment as
+                    prompted.</p>
             </li>
         </ul>
-        
+
         <h3>
             8. Debugging in VS Code (Optional)
         </h3>
         <p>
-            For a more convenient development experience, you can use Visual Studio Code to SSH into your controller node:
+            For a more convenient development experience, you can use Visual Studio Code to SSH into your controller
+            node:
         </p>
         <ol>
             <li>Click on the SSH extension icon in VS Code.</li>
@@ -517,7 +694,7 @@
                 </div>
             </li>
         </ol>
-        
+
         <h2>
             Next Steps
         </h2>
@@ -529,7 +706,7 @@
             <li>Prepare the experiment report.</li>
             <li>Plan for future experiments.</li>
         </ul>
-        
+
         <h2>
             Additional Resources
         </h2>
@@ -537,16 +714,19 @@
             <li><a href="https://github.com/WindowsXp-Beta/SocialNetwork">SocialNetwork GitHub Repository</a></li>
             <li><a href=https://explainshell.com>Explain Shell Tool</a></li>
         </ul>
-        
+
         <h2>
             References
         </h2>
         <ol style="list-style-type: none; padding-left: 0;">
             <li style="padding-left: 2em; text-indent: -2em;">
-                [1] "Experimental Verification of the Millibottleneck Theory of Performance Bugs with the WISE Toolkit," Gatech.edu, 2024. Available at: <a href="https://sites.cc.gatech.edu/~ral3/tutorial2.html">https://sites.cc.gatech.edu/~ral3/tutorial2.html</a>.
+                [1] "Experimental Verification of the Millibottleneck Theory of Performance Bugs with the WISE Toolkit,"
+                Gatech.edu, 2024. Available at: <a
+                    href="https://sites.cc.gatech.edu/~ral3/tutorial2.html">https://sites.cc.gatech.edu/~ral3/tutorial2.html</a>.
             </li>
             <li style="padding-left: 2em; text-indent: -2em;">
-                [2] SocialNetwork Application Repository. Available at: <a href="https://github.com/WindowsXp-Beta/SocialNetwork">https://github.com/WindowsXp-Beta/SocialNetwork</a>
+                [2] SocialNetwork Application Repository. Available at: <a
+                    href="https://github.com/WindowsXp-Beta/SocialNetwork">https://github.com/WindowsXp-Beta/SocialNetwork</a>
             </li>
         </ol>
         <h2>
@@ -557,92 +737,111 @@
             [A] setup_docker_swarm.py breakdown
         </h4>
         <div class="code-block">
-    def parse_args():
-        parser = argparse.ArgumentParser()
-        parser.add_argument('-n', '--number', type=int, required=True, help='Docker Swarm Cluter Size')
-        parser.add_argument('-a', '--ip', type=str, required=True, help='Mgr IP')
-        parser.add_argument('-cn', '--client-number', type=int, required=True, help='Client Cluster Size')
-        return parser.parse_args()
+            def parse_args():
+            parser = argparse.ArgumentParser()
+            parser.add_argument('-n', '--number', type=int, required=True, help='Docker Swarm Cluter Size')
+            parser.add_argument('-a', '--ip', type=str, required=True, help='Mgr IP')
+            parser.add_argument('-cn', '--client-number', type=int, required=True, help='Client Cluster Size')
+            return parser.parse_args()
         </div>
         <p>
-            This block uses an ArgumentParser object from the argparse library to take in command line arguments. Each line parses the command line arguments, looking for the appropriate flag.
+            This block uses an ArgumentParser object from the argparse library to take in command line arguments. Each
+            line parses the command line arguments, looking for the appropriate flag.
         </p>
 
         <div class="code-block">
-    install_docker = '''sudo apt-get update && \
-    sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
-    ca-certificates curl gnupg lsb-release && \
-    sudo install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
-    echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | \
-    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-    sudo apt-get update && \
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y docker-ce docker-ce-cli containerd.io'''
-    install_collectl = 'sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y collectl'
-    install_sysdig = 'sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y sysdig'
-    clone_official_socialnetwork_repo = 'ssh-keygen -F github.com || ssh-keyscan github.com >> ~/.ssh/known_hosts && git clone https://github.com/delimitrou/DeathStarBench.git && cd DeathStarBench && git checkout b2b7af9 && cd ..'
+            install_docker = '''sudo apt-get update && \
+            sudo DEBIAN_FRONTEND=noninteractive apt-get -y install \
+            ca-certificates curl gnupg lsb-release && \
+            sudo install -m 0755 -d /etc/apt/keyrings && \
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            && \
+            echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg]
+            https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | \
+            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+            sudo apt-get update && \
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y docker-ce docker-ce-cli containerd.io'''
+            install_collectl = 'sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y collectl'
+            install_sysdig = 'sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y sysdig'
+            clone_official_socialnetwork_repo = 'ssh-keygen -F github.com || ssh-keyscan github.com >>
+            ~/.ssh/known_hosts && git clone https://github.com/delimitrou/DeathStarBench.git && cd DeathStarBench && git
+            checkout b2b7af9 && cd ..'
         </div>
         <p>
-            The strings in this code block are shell commands for installing Docker, Collectl, Sysdig, and cloning the DeathStarBench repository. The swarm nodes will install Docker, Collectl, and clone the repository, while sysdig is installed on a client node.
+            The strings in this code block are shell commands for installing Docker, Collectl, Sysdig, and cloning the
+            DeathStarBench repository. The swarm nodes will install Docker, Collectl, and clone the repository, while
+            sysdig is installed on a client node.
         </p>
 
         <div class="code-block">
-    with ThreadingGroup(*[f'node-{idx}' for idx in range(0, args.number)]) as swarm_grp, \
-    ThreadingGroup(*[f'node-{idx}' for idx in range(args.number, args.number + args.client_number)]) as client_grp:
+            with ThreadingGroup(*[f'node-{idx}' for idx in range(0, args.number)]) as swarm_grp, \
+            ThreadingGroup(*[f'node-{idx}' for idx in range(args.number, args.number + args.client_number)]) as
+            client_grp:
         </div>
         <p>
-            These two lines use ThreadingGroup from the fabric library to create a group of SSH connections. Fabric is a library used to execute shell commands over SSH. Here, a group of SSH connections is made so that the commands can be executed on each node in the group simulataneously.
+            These two lines use ThreadingGroup from the fabric library to create a group of SSH connections. Fabric is a
+            library used to execute shell commands over SSH. Here, a group of SSH connections is made so that the
+            commands can be executed on each node in the group simulataneously.
         </p>
 
         <div class="code-block">
-    swarm_grp.run(install_collectl)
-    print('** collectl installed **')
-    swarm_grp.run(clone_official_socialnetwork_repo)
-    print('** socialNetwork cloned **')
-    swarm_grp.run(install_docker)
-    print('** docker installed **')
+            swarm_grp.run(install_collectl)
+            print('** collectl installed **')
+            swarm_grp.run(clone_official_socialnetwork_repo)
+            print('** socialNetwork cloned **')
+            swarm_grp.run(install_docker)
+            print('** docker installed **')
         </div>
         <p>
-            This code executes the installation commands for collectl, clone_official_socialnetwork_repo, and install_docker on each node in the swarm_grp threading group.
+            This code executes the installation commands for collectl, clone_official_socialnetwork_repo, and
+            install_docker on each node in the swarm_grp threading group.
         </p>
 
         <div class="code-block">
-    ret = subprocess.run(['sudo', 'docker', 'swarm', 'init', '--advertise-addr', args.ip], capture_output=True)
-    print('** swarm manager initialized **')
-    swarm_join_cmd_ptn = r'(docker swarm join --token .*:\d+)'
-    swarm_join_cmd = re.search(swarm_join_cmd_ptn, ret.stdout.decode('utf-8'))
-    if swarm_join_cmd is None:
-        print('Don\'t find match pattern for docker swarm join:')
-        print(f'The ret of swarm init is {ret}')
-        exit(0)
-    else:
-        swarm_join_cmd = swarm_join_cmd.group()
+            ret = subprocess.run(['sudo', 'docker', 'swarm', 'init', '--advertise-addr', args.ip], capture_output=True)
+            print('** swarm manager initialized **')
+            swarm_join_cmd_ptn = r'(docker swarm join --token .*:\d+)'
+            swarm_join_cmd = re.search(swarm_join_cmd_ptn, ret.stdout.decode('utf-8'))
+            if swarm_join_cmd is None:
+            print('Don\'t find match pattern for docker swarm join:')
+            print(f'The ret of swarm init is {ret}')
+            exit(0)
+            else:
+            swarm_join_cmd = swarm_join_cmd.group()
         </div>
         <p>
-            <code>ret = subprocess.run(['sudo', 'docker', 'swarm', 'init', '--advertise-addr', args.ip], capture_output=True)</code> This initializes a Docker Swarm on the controller node. The --advertise-addr argument specifies the IP address other nodes will use to join the swarm.
+            <code>ret = subprocess.run(['sudo', 'docker', 'swarm', 'init', '--advertise-addr', args.ip], capture_output=True)</code>
+            This initializes a Docker Swarm on the controller node. The --advertise-addr argument specifies the IP
+            address other nodes will use to join the swarm.
             <code>
                 swarm_join_cmd_ptn = r'(docker swarm join --token .*:\d+)'
                 swarm_join_cmd = re.search(swarm_join_cmd_ptn, ret.stdout.decode('utf-8'))
             </code>
-            This defines a RegEx expression that is used to extract the command used to join the Docker swarm node. The second line uses a RegEx search utility function to find and return the command string from the output of the swarm initialization.
+            This defines a RegEx expression that is used to extract the command used to join the Docker swarm node. The
+            second line uses a RegEx search utility function to find and return the command string from the output of
+            the swarm initialization.
 
-            It properly handles the case where this command isn't found. If it is found, it extracts the string and sets it to the swarm_join_cmd variable.
+            It properly handles the case where this command isn't found. If it is found, it extracts the string and sets
+            it to the swarm_join_cmd variable.
         </p>
 
         <div class="code-block">
-    with ThreadingGroup.from_connections(swarm_grp[1:]) as grp_worker:
-        grp_worker.run('sudo ' + swarm_join_cmd)
-        grp_worker.run('if [ ! -e "$HOME/.ssh/config" ]; then echo -e "Host *\n\tStrictHostKeyChecking no" >> $HOME/.ssh/config; fi')
-        grp_worker.put(Path.home()/'.ssh'/'id_rsa', '.ssh')
-        print('** swarm cluster ready **')
+            with ThreadingGroup.from_connections(swarm_grp[1:]) as grp_worker:
+            grp_worker.run('sudo ' + swarm_join_cmd)
+            grp_worker.run('if [ ! -e "$HOME/.ssh/config" ]; then echo -e "Host *\n\tStrictHostKeyChecking no" >>
+            $HOME/.ssh/config; fi')
+            grp_worker.put(Path.home()/'.ssh'/'id_rsa', '.ssh')
+            print('** swarm cluster ready **')
         </div>
         <p>
-            This block of code initializes a new ThreadingGroup that represents the worker nodes (hosting active containers), and gets them to join the swarm using the command found earlier.
-            The next line checks if the SSH config is there on each node, and then adds a line to the file that disables strict host key checking.
+            This block of code initializes a new ThreadingGroup that represents the worker nodes (hosting active
+            containers), and gets them to join the swarm using the command found earlier.
+            The next line checks if the SSH config is there on each node, and then adds a line to the file that disables
+            strict host key checking.
             Then, the private key we uploaded to the controller is dispered to all the nodes in the workergroup.
         </p>
 
-        
+
 
 
 
@@ -650,9 +849,325 @@
             [B] CloudLab Tips
         </h4>
         <ul>
-            <li>If you are executing this experiment with a partner, make sure you also add their public keys to your GitHub and CloudLab key management system.</li>
-            <li>In order to successfully provision nodes from CloudLab, make sure there are one's available before instantiating the profile. You can check the availability of nodes, and their future availabilty on the resource availability page. This is done by looking at the graph.</li>
+            <li>If you are executing this experiment with a partner, make sure you also add their public keys to your
+                GitHub and CloudLab key management system.</li>
+            <li>In order to successfully provision nodes from CloudLab, make sure there are one's available before
+                instantiating the profile. You can check the availability of nodes, and their future availabilty on the
+                resource availability page. This is done by looking at the graph.</li>
         </ul>
         <hr>
-    </body>
+    </div>
+
+    <div class="page" id="page2" style="display: none;">
+        <h1>
+            ELBA/WISE Millibottleneck Theory: PACE Cluster Information
+        </h1>
+
+        <button onclick="changePage(1)">CloudLab</button>
+        <button onclick="changePage(2)">PACE Cluster</button>
+
+        <h2>
+            Introduction
+        </h2>
+        <p>
+            In future semesters, the SocialNetwork microservices performance benchmark will be moved off CloudLab and be
+            configured to run on PACE, Georgia Tech's high performance computing environment.
+            PACE provides infrastructure, commodity services, software support, technical services, and scalable,
+            shared, compute clusters. This gives Georgia Tech faculty and students access to the tools needed to perform
+            innovative research.
+        </p>
+
+        <h2>
+            Objectives
+        </h2>
+        <p>
+            On this page, we seek to provide an introduction into working with PACE, as well as draw parallels between
+            PACE and Cloudlab. We will identify tools and technologies that were useful for Cloudlab, and will be useful
+            when the experiment is hosted on PACE.
+        </p>
+
+        <h2>
+            PACE Architecture
+        </h2>
+        <img src="images/clusterFlow.png" class="image">
+        <p>
+            The nodes in PACE are seperated into head nodes and compute nodes.
+            The head nodes are a shared resource that are used to log in to the cluster. They are not used for
+            computation or vizualizations, but are instead good for data management / configuration.
+            The compute nodes are the machines that execute all the computations. They aren't directly accessed by the
+            user, instead they are given jobs by the scheduler as they come in.
+        </p>
+        <br>
+        <img src="images/schedulerFlow.png" class="image">
+        <p>
+            This flowchart depicts how compute resources are allocated on the PACE cluster. Depending on the specified
+            machine make and model in the salloc or sbatch request, you will be allocated these resources.
+            Each hardware type, CPU or GPU has a default machine that jobs will spillover on to if the requested machine
+            is unavailable. This happens without any user action. This allows for a fair use of shared resources.
+            All the user needs to do is specify the needed number of CPUs, GPUs, memory, walltime, and any specific
+            hardware resources. As the resources become available, they will be allocated for the user's jobs for as
+            long as requested in the job submission.
+        </p>
+
+        <h3>
+            Cluster Types
+        </h3>
+        <ul>
+            <li>Phoenix</li>
+            <p>The Phoenix cluster is the general compute cluster, good for high performance computing and broad
+                research fields.</p>
+            <li>Hive</li>
+            <p>Hive is a newer cluster within PACE, added after grant was awarded by the NSF for use in research
+                regarding astrophysics, computational biology, health science, chemistry, materials and manufacturing,
+                and more.</p>
+            <li>Firebird</li>
+            <p>This cluster supports research projects that require a high amount of security and confidentiality. This
+                is because it is operating over controlled unclassified information, which includes defense data,
+                personally identifying information, and other sensitive research data.</p>
+            <li>ICE</li>
+            <p>This cluster is aimed at instructional use, supporting educational efforts across Tech's campus. This
+                cluster allows graduate and undergraduate students the opportunity to gain experience in a high
+                performance computing environment and have access to the tools that researchers at the institution use.
+            </p>
+        </ul>
+
+        <h3>
+            Acessing Clusters
+        </h3>
+        <p>
+            PACE has a web-based GUI called Open OnDemand that can be used to access and manage files, create and submit
+            jobs, and monitor those jobs.
+        </p>
+        <p>
+            The cluster can also be accessed via the command line, in a similar manner to the CloudLab hosts. You will
+            need an SSH client, which comes packaged with most common terminal applications.
+            Then you can access the login clusters using ssh <GT_username>@login-ice.pace.gatech.edu
+        </p>
+
+        <h3>Data Accessibility</h3>
+        <p>Data is accessible from all nodes.</p>
+        <b>Storage Directories:</b>
+
+        <ul>
+            <li><b>home:</b> Quota varies, backed up daily.</li>
+            <li><b>project storage:</b> Quota depends on PI, backed up daily.</li>
+            <li><b>scratch:</b> Quota varies, files >60 days deleted, not backed up.</li>
+        </ul>
+        <h3>Accessing Clusters</h3> PACE offers a web GUI and SSH access via
+        <code>ssh &lt;GT_username&gt;@login-ice.pace.gatech.edu</code>.
+
+        <h3>Data Migration</h3> The main tool used for data transfer on PACE is Globus, a secure and high performance
+        file transfer service. The endpoints for Globus are listed below.<ul>
+            <li>Hive - PACE Hive</li>
+            <li>Phoenix - PACE Phoenix</li>
+        </ul>
+        <p>
+            For small file copies, use scp: <code>scp -r /mylocalstuff @.pace.gatech.edu:/</code> Any SFTP client will
+            also work, such as FileZilla. Configure clients to use ".pace.gatech.edu". The "Files" tab in OpenOnDemand
+            web browser application can also be used.
+        </p>
+
+        <h3>PACE Software Stack</h3>
+
+        <h4>Licensed Software Packages</h4>
+        <p>PACE provides access to various software for research needs:</p>
+        <ul>
+            <li><strong>Common License</strong>: MATLAB, Fluent, Abaqus</li>
+            <li><strong>Individual License</strong>: VASP, Gaussian</li>
+        </ul>
+
+        <h4>Open-Source Packages and HPC Libraries</h4>
+        <ul>
+            <li>BLAS, PETSc, NAMD, NetCDF, FFTW, LAMMPS</li>
+        </ul>
+
+        <h4>Compilers</h4>
+        <ul>
+            <li>C/C++ & Fortran: GCC and Intel (both with OpenMP support)</li>
+            <li>MPI Libraries: MVAPICH, OpenMPI</li>
+            <li>GPU: CUDA</li>
+        </ul>
+
+        <h4>Scripting Languages</h4>
+        <ul>
+            <li>Python, Perl, R (Anaconda recommended for Python package management)</li>
+        </ul>
+
+        <p>
+            The full list of available software can be found on PACE's website
+            @https://gatech.service-now.com/home?id=kb_article_view&sysparm_article=KB0041975
+            The command <code>module spider</code> will list all available software packages when run on a login node.
+            You can request new software to be installed across all nodes via the software request form, or you can opt
+            to
+            download necessary software onto the nodes yourself.
+        </p>
+        <h4>Other Package Management Commands</h4>
+        <ul>
+            <li><code>module avail</code>: Lists all available modules that can be loaded with the current environment
+            </li>
+            <li><code>module list</code>: Displays all the modules that are currently loaded</li>
+            <li><code>module load</code>: Loads a module into the environment</li>
+            <li><code>module rm</code>: Removes a module from the environment</li>
+            <li><code>module purge</code>: Removes all loaded modules</li>
+        </ul>
+
+        <h3>QoS and the Slurm Scheduler</h3>
+        <p>
+            Within the Phoenix and Firebird clusters, jobs are submitted to one of two services levels that span the
+            entire
+            cluster. The default level is <strong>inferno</strong>, but when that is overloaded there is a backfill
+            level called
+            <strong>embers</strong>.
+        <h4>Inferno: Primary QoS</h4>
+        <ul>
+            <li>Base Priority: 250,000</li>
+            <li>Max jobs per user: 500</li>
+            <li>Max eligible jobs per user: 500 (10 for GPU jobs)</li>
+            <li>Wallclock limit: 21 days (3 days for GPU jobs)</li>
+            <li>Jobs charged to the provided account</li>
+        </ul>
+
+        <h4>Embers: Backfill QoS</h4>
+        <ul>
+            <li>Base Priority: 0</li>
+            <li>Max jobs per user: 50</li>
+            <li>Max eligible jobs per user: 1</li>
+            <li>Wallclock limit: 8 hours</li>
+            <li>Preemption after 1 hour</li>
+            <li>Jobs not charged to an account</li>
+        </ul>
+
+        <h4>Additional Constraints on Running Jobs</h4>
+        <ul>
+            <li>Per-account processors: 6000 (Inferno only)</li>
+            <li>Per-user GPUs: 32 (Inferno only)</li>
+            <li>Per-account CPU-time: 300,000 CPU-hours (including Embers jobs)</li>
+        </ul>
+        </p>
+
+        <h4>Modes of Operation</h4>
+        <p>The SLURM (Simple Linux Utility for Resource Management) is a resource management tool that has integrated
+            scheduling logic. The implementation that runs on PACE has two modes of operation for submitting jobs,
+            interactive and batch.</p>
+        <h5>Interactive Mode</h5>
+        <p>
+            Allows for interactive use for job creation and submission to the scheduler. The same as accessing any
+            remote workstation and executing a job. Submitted jobs will wait in a queue until resources are available
+            while the user waits in real-time. When resources are available, your job will be submitted to a compute
+            node.
+            Use the <code>salloc</code> command to request an interactive job. The <code>salloc --help</code> command
+            may be of use as well.
+        </p>
+        <h5>Batch Mode</h5>
+        <p>You can submit a job as an sbatch script which waits in a queue until resources are available. Everything
+            runs on its own in the background once a resource is available. The script will include resource
+            requirements, settings, and tasks. Note that if your job requires user interaction, you cannot use batch
+            processing.</p>
+        <h4>SBATCH Script Explanation</h4>
+        <img class="image" src="images/sbatchExample.png">
+        <p>This script is used to submit a job to the Slurm workload manager for PACE clusters. Below is a detailed
+            explanation of
+            each line:</p>
+
+        <pre><code>#!/bin/bash</code></pre>
+        <p>Specifies that the script should be run using the Bash shell.</p>
+
+        <pre><code>#SBATCH -Jexample</code></pre>
+        <p>Sets the job name to "example" for easy identification in the queue.</p>
+
+        <pre><code>#SBATCH --account=gts-gburdell3</code></pre>
+        <p>Specifies the charge or tracking account to attribute the job's usage to.</p>
+
+        <pre><code>#SBATCH -N2 --ntasks-per-node=2</code></pre>
+        <p>Requests 2 nodes with 2 tasks (cores) per node, totaling 4 tasks.</p>
+
+        <pre><code>#SBATCH --mem-per-cpu=6G</code></pre>
+        <p>Allocates 6 GB of memory per core, resulting in 24 GB total for the job.</p>
+
+        <pre><code>#SBATCH -t1:00:00</code></pre>
+        <p>Sets a time limit of 1 hour; the job will be terminated if it exceeds this limit.</p>
+
+        <pre><code>#SBATCH -qembers</code></pre>
+        <p>Specifies the QoS (Quality of Service) as "embers," determining priority and resource allocation.</p>
+
+        <pre><code>#SBATCH -oReport-%j.out</code></pre>
+        <p>Defines the output file name for job logs, using %j to insert the job ID.</p>
+
+        <pre><code>#SBATCH --mail-type=BEGIN,END,FAIL</code></pre>
+        <p>Sends email notifications when the job begins, ends, or fails.</p>
+
+        <pre><code>#SBATCH --mail-user=gburdell3@gatech.edu</code></pre>
+        <p>Sets the recipient email address for job status notifications.</p>
+
+        <pre><code>module load anaconda3/2022.05.0.1</code></pre>
+        <p>Loads the specified Anaconda module, preparing the Python environment.</p>
+
+        <pre><code>python test.py</code></pre>
+        <p>Runs the Python script "test.py" as the main task of the job.</p>
+
+        <h4>Slurm Info Commands</h4>
+        <pre><code>
+        # Check job status
+        squeue -u &lt;GT-username&gt;
+        
+        # Cancel a job
+        scancel &lt;job-id&gt;
+        
+        # Info on completed jobs
+        sacct -j &lt;job-id&gt;
+        
+        # Review completed jobs
+        pace-job-summary &lt;job-id&gt;
+        </code></pre>
+
+        <h4>Additional Commands</h4>
+        <pre><code>
+        # View partition and node info
+        sinfo
+        
+        # Run a parallel job on the cluster
+        srun
+        </code></pre>
+
+        <h4>MPI Jobs in HPC Environments</h4>
+        <p>MPI (Message Passing Interface) jobs are used in high-performance computing (HPC) to enable parallel
+            processing across multiple nodes. MPI is a message passing standard created for parallel computing systems.
+            It is designed to be portable between different systems. MPI allows tasks to communicate by passing
+            messages, making it suitable
+            for large-scale simulations and computations that require significant communication between nodes.
+            Typically,
+            MPI jobs are launched using <code>srun</code> or <code>mpirun</code> commands. The PACE cluster supports the
+            MPI libraries MVAPICH and OpenMPI without needing to install extra packages.
+        </p>
+        <p>MPI (Message Passing Interface) jobs can be executed in Slurm using <code>srun</code>. This method ensures
+            efficient
+            parallel job execution across nodes.</p>
+        <pre><code>
+            # Compile the MPI program
+            mpicc mpi_program.c -o mpi_program
+            
+            # Run the program with 4 tasks and 1 CPU per task
+            srun -n4 -c1 mpi_program program_arguments
+            </code></pre>
+        <h4>Array Jobs in HPC Environments</h4>
+        <p>Array jobs allow users to submit multiple tasks with a single job script, often used for running many similar
+            tasks, such as parameter sweeps or batch data processing. Each task runs independently, and they are managed
+            under a single job ID, making monitoring and resource allocation more efficient. Array jobs are typically
+            specified using the <code>--array</code> flag in Slurm.</p>
+        <pre><code>
+                #SBATCH --array=1-10
+                #SBATCH -o %A_%a.out
+                
+                # Executes the program with input indexed by SLURM_ARRAY_TASK_ID
+                srun myprogram data${SLURM_ARRAY_TASK_ID}
+                </code></pre>
+        <p>Here, <code>%A</code> is the job ID and <code>%a</code> is the array task ID, which helps organize output
+            files.</p>
+
+        <p>For more details, check out the Slurm and Conversion guides for MPI and array job examples and PBS-to-Slurm
+            script conversion.</p>
+
+    </div>
+</body>
+
 </html>
